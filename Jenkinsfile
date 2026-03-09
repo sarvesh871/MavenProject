@@ -7,15 +7,16 @@ pipeline {
                 checkout scm
             }
         }
+
         stage('Build') {
             steps {
-                // This runs the Maven command using the pom.xml
-                bat 'mvn clean compile'
+                sh 'mvn clean compile'
             }
         }
+
         stage('Test') {
             steps {
-                bat 'mvn test'
+                sh 'mvn test'
             }
         }
     }
