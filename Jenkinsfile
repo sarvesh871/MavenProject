@@ -10,16 +10,15 @@ pipeline {
 
         stage('Initialize') {
             steps {
-                sh 'echo "PATH = $M2_HOME/bin:$PATH"'
+                sh 'echo "JAVA_HOME = $JAVA_HOME"'
                 sh 'echo "M2_HOME = $M2_HOME"'
+                sh 'echo "PATH = $PATH"'
             }
         }
 
         stage('Build') {
             steps {
-                dir('/Users/Shared/Jenkins/Home/workspace/demopipelinetask/my-app') {
-                    sh 'mvn -B -DskipTests clean package'
-                }
+                sh 'mvn -B clean package'
             }
         }
     }
@@ -27,7 +26,7 @@ pipeline {
     post {
         always {
             junit allowEmptyResults: true,
-                  testResults: '**/test-reports/*.xml'
+                  testResults: '**/surefire-reports/*.xml'
         }
     }
 }
