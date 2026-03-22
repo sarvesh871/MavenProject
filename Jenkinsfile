@@ -1,23 +1,33 @@
 pipeline {
     agent any
 
+    tools {
+        maven "MAVEN"
+        jdk "JDK21"
+    }
+
     stages {
-        stage('Checkout') {
+
+        stage('Initialize') {
             steps {
-                checkout scm
+                sh 'echo "PATH = $M2_HOME/bin:$PATH"'
+                sh 'echo "M2_HOME = $M2_HOME"'
             }
         }
 
         stage('Build') {
             steps {
-                sh 'mvn clean compile'
+                dir('/Users/Shared/Jenkins/Home/workspace/demopipelinetask/my-app') {
+                    sh 'mvn -B -DskipTests clean package'
+                }
             }
         }
+    }
 
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
+    post {
+        always {
+            junit allowEmptyResults: true,
+                  testResults: '**/test-reports/*.xml'
         }
     }
 }
